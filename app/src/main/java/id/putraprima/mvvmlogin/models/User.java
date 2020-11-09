@@ -7,10 +7,10 @@ import androidx.annotation.NonNull;
 
 public class User {
     @NonNull
-    private String email;
+    public String email;
     @NonNull
-    private String password;
-    private String message ;
+    public String password;
+    public String message ;
 
     public User() {
     }
@@ -47,7 +47,7 @@ public class User {
     }
 
     public boolean isInputDataValid() {
-        return !TextUtils.isEmpty(getEmail()) && Patterns.EMAIL_ADDRESS.matcher(getEmail()).matches() && getPassword().length() > 5;
+        return Patterns.EMAIL_ADDRESS.matcher(getEmail()).matches() && getPassword().length() > 5;
     }
 
 

@@ -1,39 +1,60 @@
 package id.putraprima.mvvmlogin.viewmodels;
 
+import android.os.Bundle;
+import android.util.Log;
+
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import id.putraprima.mvvmlogin.models.User;
 
 public class LoginViewModels extends ViewModel {
-    public MutableLiveData <User> userMutableLiveData = new MutableLiveData<>();
-    private User user = new User(null,null);
+    private String email = "indra@gmail.com";
+    private String password = "123456";
 
-    public String toastMessage = null;
+    private MutableLiveData<User> userMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<Boolean> loggedMutableLive = new MutableLiveData<>();
+    private MutableLiveData<String> errorData = new MutableLiveData<>();
+   public User user;
 
-    public String getToastMessage() {
-        return toastMessage;
+    public LoginViewModels(User user) {
+        this.user = user;
+        this.userMutableLiveData.setValue(this.user);
     }
 
-    public void setToastMessage(String toastMessage) {
-        this.toastMessage = toastMessage;
+    public LiveData<User> getLogin(){
+        return this.userMutableLiveData;
     }
 
-    public void afterEmailChange(CharSequence e){
-        user.setEmail(e.toString());
+    public LiveData<Boolean> loggedLiveData() {
+        return this.loggedMutableLive;
     }
-    public void afterPasswordChange(CharSequence p){
-        user.setPassword(p.toString());
+
+    public LiveData<String> getError(){
+        return this.errorData;
     }
-    public void onLoginClicked(){
-        if (user.isInputDataValid()){
-            user.setMessage("Berhasil Login");
+
+
+
+    public void BtnLoggin(){
+        Log.d("Email",user.email);
+        Log.d("Pass",user.password);
+        loggedMutableLive.setValue(false);
+
+        if (user.email.equals(email) && user.password.equals(password)){
+            userMutableLiveData.setValue(user);
+            loggedMutableLive.setValue(true);
+            return;
+        } else if(!user.isInputDataValid()){
+            errorData.setValue("Masukkan Data Dengan Benar"); // set pesan error
+            loggedMutableLive.setValue(false);
+            return;
+        } else if (user.email.isEmpty() || user.password.isEmpty()||user.email==null||user.password==null||!user.email.equals(email) || !user.password.equals(password)){
+            errorData.setValue("Lengkapi Data Email dan Password "); // set pesan
+            loggedMutableLive.setValue(false);
+            return;
         }
-        else {
-            user.setMessage("Gagal Login");
-        }
-        userMutableLiveData.setValue(user);
-        setToastMessage(user.getMessage());
 
     }
 }
